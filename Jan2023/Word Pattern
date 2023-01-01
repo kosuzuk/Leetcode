@@ -1,0 +1,27 @@
+class Solution {
+    func wordPattern(_ pattern: String, _ s: String) -> Bool {
+        var dict: [String: Character] = [:]
+        var charsUsed: Set<Character> = Set([])
+        let words = s.components(separatedBy: " ")
+        if pattern.count != words.count {
+            return false
+        }
+
+        for i in 0..<words.count {
+            let charInPattern = pattern[pattern.index(pattern.startIndex, offsetBy: i)]
+            if let savedChar = dict[words[i]] {
+                if savedChar != charInPattern {
+                    return false
+                }
+            } else {
+                if charsUsed.contains(charInPattern) {
+                    return false
+                }
+                dict[words[i]] = charInPattern
+                charsUsed.insert(charInPattern)
+            }
+        }
+
+        return true
+    }
+}
