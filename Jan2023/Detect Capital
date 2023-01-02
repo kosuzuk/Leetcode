@@ -1,0 +1,11 @@
+class Solution {
+    func detectCapitalUse(_ word: String) -> Bool {
+        if word.uppercased() == word || word.lowercased() == word {
+            return true
+        }
+
+        let firstCharIsUpper = word.prefix(1).uppercased() == word.prefix(1)
+        let restIsLower = word.suffix(word.count - 1).lowercased() == word.suffix(word.count - 1)
+        return firstCharIsUpper && restIsLower
+    }
+}
