@@ -1,0 +1,23 @@
+class Solution {
+    func minDeletionSize(_ strs: [String]) -> Int {
+        if strs.isEmpty || strs[0].isEmpty {
+            return 0
+        }
+        var res = 0
+        var charArr: [[Character]] = []
+        for str in strs {
+            charArr.append(Array(str))
+        }
+
+        for col in 0..<charArr[0].count {
+            for row in 0..<(charArr.count - 1) {
+                if charArr[row][col] > charArr[row + 1][col] {
+                    res += 1
+                    break
+                }
+            }
+        }
+
+        return res
+    }
+}
