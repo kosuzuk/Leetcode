@@ -1,0 +1,42 @@
+class Solution {
+    func minimumRounds(_ tasks: [Int]) -> Int {
+        let tasks = tasks.sorted()
+        var curTaskLevel = tasks[0]
+        var numberOfTasks = 0
+        var res = 0
+
+        for taskLevel in tasks {
+            if taskLevel == curTaskLevel {
+                numberOfTasks += 1
+            } else {
+                if numberOfTasks == 1 {
+                    return -1
+                }
+                res += minRoundsForTaskLevel(numberOfTasks)
+                curTaskLevel = taskLevel
+                numberOfTasks = 1
+            }
+        }
+        if numberOfTasks == 1 {
+            return -1
+        }
+        res += minRoundsForTaskLevel(numberOfTasks)
+
+        return res
+    }
+
+    func minRoundsForTaskLevel(_ numberOfTasks: Int) -> Int {
+        if numberOfTasks == 2 || numberOfTasks == 3 {
+            return 1
+        }
+        if numberOfTasks == 4 {
+            return 2
+        }
+        let res = numberOfTasks / 3
+        let remainder = numberOfTasks % 3
+        if remainder == 0 {
+            return res
+        }
+        return res + 1
+    }
+}
