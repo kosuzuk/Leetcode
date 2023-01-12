@@ -1,0 +1,59 @@
+class Solution {
+    func minTime(_ n: Int, _ edges: [[Int]], _ hasApple: [Bool]) -> Int {
+        let treeDict = buildTree(edges, hasApple)
+        let res = minTimeFromTree(treeDict, hasApple)
+
+        // -2 because traveling back up from root node is not necessary
+        return res == 0 ? 0 : res - 2
+    }
+
+    func buildTree(_ edges: [[Int]], _ hasApple: [Bool]) -> [Int: [Int]] {
+        // build a tree using a dictionary
+        var res: [Int: [Int]] = [:]
+        var nodesSeen = Set([0])
+
+        for edge in edges {
+            var edge = edge
+            var parentNode = edge[0]
+            if !nodesSeen.contains(parentNode) {
+                // correct the order
+                edge.swapAt(0, 1)
+                parentNode = edge[0]
+            }
+            if let children = res[parentNode] {
+                res[parentNode] = children + [edge[1]]
+            } else {
+                res[parentNode] = [edge[1]]
+            }
+            nodesSeen.insert(edge[1])
+        }
+
+        return res
+    }
+
+    func minTimeFromTree(_ tree: [Int: [Int]], _ hasApple: [Bool], _ curNode: Int = 0) -> Int {
+        // tree leaf
+        if tree[curNode] == nil {
+            return hasApple[curNode] ? 2 : 0
+        }
+
+        var subTreesCost = 0
+        if let children = tree[curNode], !children.isEmpty {
+            for child in children {
+                subTreesCost += minTimeFromTree(tree, hasApple, child)
+            }
+        }
+        let curNodeCost = hasApple[curNode] ? 2 : 0
+
+        if !hasApple[curNode] && subTreesCost == 0 {
+            // no apple in current node or children sub trees
+            return 0
+        } else {
+            // apple exists in current node or children sub trees
+            return 2 + subTreesCost
+        }
+    }
+}
+
+
+
