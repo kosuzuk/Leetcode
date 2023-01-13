@@ -1,0 +1,80 @@
+class Solution {
+    func countSubTrees(_ n: Int, _ edges: [[Int]], _ labels: String) -> [Int] {
+        // the result value to return in dictionary format
+        let resDict = getDicts(buildTree(edges), 0, Array(labels))[1]
+        var res: [Int] = []
+
+        // convert to array
+        for i in 0..<labels.count {
+            if let count = resDict[i] {
+                res.append(count)
+            }
+        }
+
+        return res
+    }
+
+    func buildTree(_ edges: [[Int]]) -> [Int: [Int]] {
+        // build a tree using a dictionary
+        var res: [Int: [Int]] = [:]
+        var nodesSeen = Set([0])
+
+        for edge in edges {
+            var edge = edge
+            var parentNode = edge[0]
+            if !nodesSeen.contains(parentNode) {
+                // correct the order
+                edge.swapAt(0, 1)
+                parentNode = edge[0]
+            }
+            if let children = res[parentNode] {
+                res[parentNode] = children + [edge[1]]
+            } else {
+                res[parentNode] = [edge[1]]
+            }
+            nodesSeen.insert(edge[1])
+        }
+
+        return res
+    }
+
+    func getDicts(_ tree: [Int: [Int]], _ curNode: Int, _ labels: [Character]) -> [[Int: Int]] {
+        let curChar = labels[curNode]
+        let curCharAscii = Int(curChar.asciiValue!)
+
+        // leaf node
+        guard let children = tree[curNode] else {
+            return [[curCharAscii: 1], [curNode: 1]]
+        }
+
+        // result of function returned from 1st child
+        let dicts1 = getDicts(tree, children[0], labels)
+        // the number of instances for each distinct char in this subtree
+        var charCount1 = dicts1[0]
+        // result of this problem from this subtree
+        var resDict1 = dicts1[1]
+        if children.count > 1 {
+            // do the same calculation for other children subtrees
+            for i in 1..<children.count {
+                let dicts2 = getDicts(tree, children[i], labels)
+                let charCount2 = dicts2[0]
+                let resDict2 = dicts2[1]
+
+                for (k, v) in charCount2 {
+                    // add up the char count
+                    charCount1[k] = (charCount1[k] ?? 0) + v
+                }
+                // combine the results
+                resDict1.merge(resDict2, uniquingKeysWith: { (_, x) in x })
+            }
+        }
+        // add the char count for current node
+        charCount1[curCharAscii] = (charCount1[curCharAscii] ?? 0) + 1
+        // obtain the result for this problem for the current node
+        resDict1[curNode] = charCount1[curCharAscii]!
+
+        return [charCount1, resDict1]
+    }
+}
+
+
