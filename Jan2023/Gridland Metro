@@ -1,0 +1,49 @@
+func gridlandMetro(n: Int, m: Int, k: Int, track: [[Int]]) -> Int {
+    if track.isEmpty {
+        return n * m
+    }
+    var tracksByRow: [[[Int]]] = []
+    // initilize with empty lists
+    for _ in 0..<n {
+        tracksByRow.append([])
+    }
+    // insert tracks into correct index representing a row
+    for t in track {
+        tracksByRow[t[0] - 1].append([t[1], t[2]])
+    }
+    // sort the tracks based on starting col
+    for row_i in 0..<tracksByRow.count {
+        tracksByRow[row_i].sort(by: { $0[0] <= $1[0] })
+    }
+    
+    var res = 0
+    for tracksInRow in tracksByRow {
+        var curCol = 1
+        var rightmostTrackEdge = 1
+        if tracksInRow.isEmpty {
+            // the entire row is empty
+            res += m
+        }
+        
+        for track_i in 0..<tracksInRow.count {
+            if tracksInRow[track_i][0] > curCol {
+                // available space between current col and track starting col
+                res += tracksInRow[track_i][0] - curCol
+            }
+            // check to cover cases for overlapping tracks
+            if tracksInRow[track_i][1] > curCol {
+                curCol = tracksInRow[track_i][1] + 1
+            }
+            if tracksInRow[track_i][1] > rightmostTrackEdge {
+                rightmostTrackEdge = tracksInRow[track_i][1]
+            }
+            
+            // if last track in this row, check for remaining spaces
+            if track_i == tracksInRow.count - 1, rightmostTrackEdge < m {
+                res += m - rightmostTrackEdge
+            }
+        }
+    }
+    
+    return res
+}
