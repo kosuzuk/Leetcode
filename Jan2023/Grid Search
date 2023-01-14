@@ -1,0 +1,24 @@
+func gridSearch(G: [String], P: [String]) -> String {
+    let G = G.map { Array($0) }
+    let P = P.map { Array($0) }
+    
+    for i in 0...(G.count - P.count) {
+        for j in 0...(G[0].count - P[0].count) {
+            if checkOccurence(G: G, P: P, startingRow: i, startingCol: j) {
+                return "YES"
+            }
+        }
+    }
+    return "NO"
+}
+
+func checkOccurence(G: [[Character]], P: [[Character]], startingRow: Int, startingCol: Int) -> Bool {
+    for i in 0..<P.count {
+        for j in 0..<P[0].count {
+            if G[startingRow + i][startingCol + j] != P[i][j] {
+                return false
+            }
+        }
+    }
+    return true
+}
