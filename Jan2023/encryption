@@ -1,0 +1,23 @@
+func encryption(s: String) -> String {
+    let noSpaces = s.components(separatedBy: .whitespaces).joined()
+    let charCount = noSpaces.count
+    var row = Int(sqrt(Double(charCount)))
+    let col = Int(ceil(sqrt(Double(charCount))))
+    // add a row if not enough grid space for the string
+    row += (row * col < charCount ? 1 : 0)
+    let charArr = Array(noSpaces)
+    var resArr: [Character] = []
+    
+    for i in 0..<col {
+        for j in 0..<row {
+            let ind = j * col + i
+            if ind >= charCount {
+                break
+            }
+            resArr.append(charArr[ind])
+        }
+        resArr.append(" ")
+    }
+    
+    return String(resArr)
+}
