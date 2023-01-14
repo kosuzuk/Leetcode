@@ -1,0 +1,72 @@
+import Foundation
+
+func activityNotifications(expenditure: [Int], d: Int) -> Int {
+    var curWindow = Array(expenditure[0..<d])
+    curWindow.sort()
+    var median = getMedian(sortedArr: curWindow, count: d)
+    var res = 0
+    
+    for i in d..<expenditure.count {
+        // check if notification is sent
+        if Double(expenditure[i]) >= median * 2 {
+            res += 1
+        }
+        
+        // modify the current window
+        let elemToRemove = expenditure[i - d]
+        curWindow.remove(at: curWindow.firstIndex(of: elemToRemove)!)
+        // insert at correct position
+        let elemToAdd = expenditure[i]
+        let indToInsert = insertIndBinarySearch(sortedArr: curWindow, target: elemToAdd, leftInd: 0, rightInd: d - 1)
+        curWindow.insert(elemToAdd, at: indToInsert)
+        // update the median value
+        median = getMedian(sortedArr: curWindow, count: d)
+    }
+    
+    return res
+}
+
+func getMedian(sortedArr: [Int], count: Int) -> Double {
+    return (count % 2 == 1) ? Double(sortedArr[count / 2]) : (Double(sortedArr[count / 2 - 1] + sortedArr[count / 2]) / 2.0)
+}
+
+func insertIndBinarySearch(sortedArr: [Int], target: Int, leftInd: Int, rightInd: Int) -> Int {
+    if rightInd - leftInd <= 1 {
+        return rightInd
+    }
+    
+    let middle = sortedArr[(leftInd + rightInd) / 2]
+    if target < middle {
+        return insertIndBinarySearch(sortedArr: sortedArr, target: target, leftInd: leftInd, rightInd: (leftInd + rightInd) / 2 - 1)
+    } else {
+        return insertIndBinarySearch(sortedArr: sortedArr, target: target, leftInd: (leftInd + rightInd) / 2, rightInd: rightInd)
+    }
+}
+
+let stdout = ProcessInfo.processInfo.environment["OUTPUT_PATH"]!
+FileManager.default.createFile(atPath: stdout, contents: nil, attributes: nil)
+let fileHandle = FileHandle(forWritingAtPath: stdout)!
+
+guard let firstMultipleInputTemp = readLine()?.replacingOccurrences(of: "\\s+$", with: "", options: .regularExpression) else { fatalError("Bad input") }
+let firstMultipleInput = firstMultipleInputTemp.split(separator: " ").map{ String($0) }
+
+guard let n = Int(firstMultipleInput[0])
+else { fatalError("Bad input") }
+
+guard let d = Int(firstMultipleInput[1])
+else { fatalError("Bad input") }
+
+guard let expenditureTemp = readLine()?.replacingOccurrences(of: "\\s+$", with: "", options: .regularExpression) else { fatalError("Bad input") }
+
+let expenditure: [Int] = expenditureTemp.split(separator: " ").map {
+    if let expenditureItem = Int($0) {
+        return expenditureItem
+    } else { fatalError("Bad input") }
+}
+
+guard expenditure.count == n else { fatalError("Bad input") }
+
+let result = activityNotifications(expenditure: expenditure, d: d)
+
+fileHandle.write(String(result).data(using: .utf8)!)
+fileHandle.write("\n".data(using: .utf8)!)
