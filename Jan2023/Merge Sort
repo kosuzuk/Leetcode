@@ -1,0 +1,38 @@
+func mergeSort(arr: [Int]) -> [Int] {
+	let arrCount = arr.count
+	if arrCount < 2 {
+		return arr
+	}
+
+	let left = Array(arr[0..<arrCount / 2])
+	let right = Array(arr[arr.count / 2..<arrCount])
+	let sortedLeft = mergeSort(arr: left)
+	let sortedRight = mergeSort(arr: right)
+	let merged = merge(sortedLeft, sortedRight)
+
+	return merged
+}
+
+func merge(_ a: [Int], _ b: [Int]) -> [Int] {
+	var aCurInd = 0
+	var bCurInd = 0
+	var res: [Int] = []
+
+	while aCurInd < a.count && bCurInd < b.count {
+		if a[aCurInd] < b[bCurInd] {
+			res.append(a[aCurInd])
+			aCurInd += 1
+		} else {
+			res.append(b[bCurInd])
+			bCurInd += 1
+		}
+	}
+	
+	if aCurInd == a.count {
+		res += b[bCurInd..<b.count]
+	} else {
+		res += a[aCurInd..<a.count]
+	}
+
+	return res
+}
