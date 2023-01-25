@@ -1,0 +1,45 @@
+class Solution {
+    func closestMeetingNode(_ edges: [Int], _ node1: Int, _ node2: Int) -> Int {
+        if node1 == node2 {
+            return node1
+        }
+
+        var node1Visited = Set([node1])
+        var node2Visited = Set([node2])
+        var node1CurNode = node1
+        var node2CurNode = node2
+        var node1PathIsRepeating = false
+        var node2PathIsRepeating = false
+
+
+        while (node1CurNode != -1 && !node1PathIsRepeating) || (node2CurNode != -1 && !node2PathIsRepeating) {
+            if node1CurNode != -1 && !node1PathIsRepeating {
+                node1CurNode = edges[node1CurNode]
+                if node1Visited.contains(node1CurNode) {
+                    node1PathIsRepeating = true
+                } else if node1CurNode != -1 {
+                    node1Visited.insert(node1CurNode)
+                }
+            }
+
+            if node2CurNode != -1 && !node2PathIsRepeating {
+                node2CurNode = edges[node2CurNode]
+                if node2Visited.contains(node2CurNode) {
+                    node2PathIsRepeating = true
+                } else if node2CurNode != -1 {
+                    node2Visited.insert(node2CurNode)
+                }
+            }
+
+            if node2Visited.contains(node1CurNode) && node1Visited.contains(node2CurNode) {
+                return min(node1CurNode, node2CurNode)
+            } else if node2Visited.contains(node1CurNode) {
+                return node1CurNode
+            } else if node1Visited.contains(node2CurNode) {
+                return node2CurNode
+            }
+        }
+
+        return -1
+    }
+}
