@@ -1,0 +1,35 @@
+class Solution {
+    func findCheapestPrice(_ n: Int, _ flights: [[Int]], _ src: Int, _ dst: Int, _ k: Int) -> Int {
+        // convert array into dict for efficient lookup
+        var cityToDestinations: [Int: [[Int]]] = [:]
+        for flight in flights {
+            let destination = [flight[1], flight[2]]
+            cityToDestinations[flight[0]] = (cityToDestinations[flight[0]] ?? []) + [destination]
+        }
+
+        return findCheapestPriceWithDict(cityToDestinations, src, dst, k, 0)
+    }
+
+    func findCheapestPriceWithDict(_ cityToDestinations: [Int: [[Int]]], _ cur: Int, _ finalDst: Int, _ stopsLeft: Int, _ runningCost: Int, _ visited: Set<Int> = Set([])) -> Int {
+        if cur == finalDst {
+            return runningCost
+        } else if cityToDestinations[cur] == nil || stopsLeft == -1 || visited.contains(cur) {
+            return -1
+        }
+
+        let newSet = visited.union(Set([cur]))
+        let destinations = cityToDestinations[cur]!
+        var minimumValidCost = -1
+        for dst in destinations {
+            let cost = findCheapestPriceWithDict(cityToDestinations, dst[0], finalDst, stopsLeft - 1, runningCost + dst[1], newSet)
+            if (minimumValidCost == -1 && cost != -1) || (cost != -1 && cost < minimumValidCost) {
+                minimumValidCost = cost
+            }
+        }
+
+        return minimumValidCost
+    }
+}
+
+
+
