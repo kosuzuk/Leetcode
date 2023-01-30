@@ -1,0 +1,41 @@
+class Solution {
+    func searchRange(_ nums: [Int], _ target: Int) -> [Int] {
+        if nums.isEmpty || nums[0] > target || nums.last! < target {
+            return [-1, -1]
+        }
+
+        let startingInd = searchInd(nums, target, true)
+        let endingInd = searchInd(nums, target, false)
+        return [startingInd, endingInd]
+    }
+
+    func searchInd(_ nums: [Int], _ finalTarget: Int, _ lookForStartingInd: Bool) -> Int {
+        var leftInd = 0
+        var rightInd = nums.count - 1
+        let tempTarget = Double(finalTarget) + (lookForStartingInd ? -0.1 : 0.1)
+
+        while rightInd - leftInd > 1 {
+            let middleInd = (leftInd + rightInd) / 2
+            if Double(nums[middleInd]) < tempTarget {
+                leftInd = middleInd
+            } else {
+                rightInd = middleInd
+            }
+        }
+
+        if lookForStartingInd {
+            if nums[leftInd] == finalTarget {
+                return leftInd
+            } else if nums[rightInd] == finalTarget {
+                return rightInd
+            }
+        } else {
+            if nums[rightInd] == finalTarget {
+                return rightInd
+            } else if nums[leftInd] == finalTarget {
+                return leftInd
+            }
+        }
+        return -1
+    }
+}
