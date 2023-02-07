@@ -1,0 +1,13 @@
+class Solution {
+    func shuffle(_ nums: [Int], _ n: Int) -> [Int] {
+        let n2 = n * 2
+        var res: [Int] = []
+        
+        for i in 0..<(n2) {
+            let shuffle_i = i % 2 == 0 ? i / 2 : i + (n2 - i) / 2
+            res.append(nums[shuffle_i])
+        }
+
+        return res
+    }
+}
