@@ -1,0 +1,50 @@
+class Solution {
+    // Using spanning window: O(n)
+    func totalFruit(_ fruits: [Int]) -> Int {
+        if fruits.isEmpty {
+            return 0
+        }
+
+        var i = 0
+        var j = 0
+        var curMax = 1
+        var types: [Int: Int] = [:]
+        var res = 0
+
+        while j < fruits.count {
+            let type = fruits[j]
+
+            // j is on last index, no need to check this window
+            if j == fruits.count - 1 {
+                if types.keys.count >= 2 && !types.keys.contains(type) {
+                    curMax -= 1
+                }
+                break
+            }
+
+            // Able to pick fruit
+            if types.keys.count < 2 || types.keys.contains(type) {
+                if curMax > res {
+                    res = curMax
+                }
+                curMax += 1
+                types[type] = (types[type] ?? 0) + 1
+                j += 1
+            } else {
+                // More than 2 types of fruit in basket. Move left index
+                curMax -= 1
+                    let typeToRemove = fruits[i]
+                    types[typeToRemove]! -= 1
+                    if types[typeToRemove]! == 0 {
+                        types[typeToRemove] = nil
+                    }
+                    i += 1
+            }
+        }
+        if curMax > res {
+            res = curMax
+        }
+
+        return res
+    }
+}
