@@ -1,0 +1,30 @@
+class Solution {
+    func jump(_ nums: [Int]) -> Int {
+        let len = nums.count
+        if len == 1 {
+            return 0
+        } else if nums[0] >= len - 1 {
+            return 1
+        }
+        var end = nums[0]
+        var furthest = -1
+        var res = 1
+
+        for i in 0..<len {
+            let jumpDestination = i + nums[i]
+            if jumpDestination > furthest {
+                if jumpDestination >= len - 1 {
+                    return res + 1
+                }
+                furthest = jumpDestination
+            }
+
+            if i == end {
+                end = furthest
+                res += 1
+            }
+        }
+
+        return res
+    }
+}
