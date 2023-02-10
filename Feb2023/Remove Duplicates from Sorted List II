@@ -1,0 +1,60 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public var val: Int
+ *     public var next: ListNode?
+ *     public init() { self.val = 0; self.next = nil; }
+ *     public init(_ val: Int) { self.val = val; self.next = nil; }
+ *     public init(_ val: Int, _ next: ListNode?) { self.val = val; self.next = next; }
+ * }
+ */
+class Solution {
+    func deleteDuplicates(_ head: ListNode?) -> ListNode? {
+        if head == nil {
+            return nil
+        }
+
+        var curNodeInLoop = head
+        var prevVal = curNodeInLoop!.val
+        var prevValCount = 0
+        var resHead: ListNode? = nil
+        var curNodeInRes: ListNode? = nil
+
+        func addPrevNodeToRes() {
+            if resHead == nil {
+                resHead = ListNode(prevVal)
+            } else if curNodeInRes == nil {
+                curNodeInRes = ListNode(prevVal)
+                resHead!.next = curNodeInRes
+            } else {
+                curNodeInRes!.next = ListNode(prevVal)
+                curNodeInRes = curNodeInRes!.next
+            }
+        }
+
+        while curNodeInLoop != nil {
+            if prevVal != curNodeInLoop!.val {
+                if prevValCount == 1 {
+                    addPrevNodeToRes()
+                }
+
+                prevVal = curNodeInLoop!.val
+                prevValCount = 1
+            } else {
+                prevValCount += 1
+            }
+
+            curNodeInLoop = curNodeInLoop!.next
+
+            if curNodeInLoop == nil {
+                if prevValCount == 1 {
+                    addPrevNodeToRes()
+                }
+
+                return resHead
+            }
+        }        
+
+        return resHead
+    }
+}
