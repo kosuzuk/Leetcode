@@ -1,0 +1,47 @@
+class Solution {
+    func addBinary(_ a: String, _ b: String) -> String {
+        let short: [Character]
+        let long: [Character]
+        if a.count < b.count {
+            short = Array(a)
+            long = Array(b)
+        } else {
+            short = Array(b)
+            long = Array(a)
+        }
+        let shortCount = short.count
+        let longCount = long.count
+        var carry = 0
+        var res: [Character] = []
+
+        for i in 0..<long.count {
+            var val = 0
+            if i < shortCount {
+                val += Int(String(short[shortCount - 1 - i]))!
+            }
+            val += Int(String(long[longCount - 1 - i]))! + carry
+
+            switch val {
+                case 0:
+                    res = ["0"] + res
+                    carry = 0
+                case 1:
+                    res = ["1"] + res
+                    carry = 0
+                case 2:
+                    res = ["0"] + res
+                    carry = 1
+                case 3:
+                    res = ["1"] + res
+                    carry = 1
+                default:
+                    break
+            }
+        }
+        if carry == 1 {
+            res = ["1"] + res
+        }
+
+        return String(res)
+    }
+}
