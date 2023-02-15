@@ -1,0 +1,26 @@
+class Solution {
+    func addToArrayForm(_ num: [Int], _ k: Int) -> [Int] {
+        let numCount = num.count
+        let kDigits = String(k).count
+        var k = k
+        var carry = 0
+        var i = 0
+        var res: [Int] = []
+        while i < kDigits || i < numCount || carry == 1 {
+            var sum = carry
+            if i < kDigits {
+                sum += k % 10
+            }
+            if i < numCount {
+                sum += num[numCount - 1 - i]
+            }
+            
+            res = [sum % 10] + res
+            carry = sum / 10
+            k /= 10
+            i += 1
+        }
+
+        return res
+    }
+}
