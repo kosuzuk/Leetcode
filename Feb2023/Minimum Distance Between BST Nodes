@@ -1,0 +1,42 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    var prevVal: Int? = nil
+    var minDiff: Int? = nil
+
+    func minDiffInBST(_ root: TreeNode?) -> Int {
+        minDiffInBSTHelper(root)
+        return minDiff!
+    }
+
+    func minDiffInBSTHelper(_ root: TreeNode?) {
+        if root == nil {
+            return
+        }
+
+        minDiffInBSTHelper(root!.left)
+
+        if prevVal != nil {
+            let diff = root!.val - prevVal!
+            if minDiff == nil || diff < minDiff! {
+                minDiff = diff
+            }
+        }
+        prevVal = root!.val
+
+        minDiffInBSTHelper(root!.right)
+    }
+}
