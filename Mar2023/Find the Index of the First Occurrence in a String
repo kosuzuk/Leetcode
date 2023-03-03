@@ -1,0 +1,23 @@
+class Solution {
+    func strStr(_ haystack: String, _ needle: String) -> Int {
+        if needle.count > haystack.count {
+            return -1
+        }
+        let haystackArr = Array(haystack)
+        let needleArr = Array(needle)
+        var needleInd = 0
+
+        for i in 0...(haystack.count - needle.count) {
+            while needleInd < needle.count && haystackArr[i + needleInd] == needleArr[needleInd] {
+                needleInd += 1
+            }
+            if needleInd == needle.count {
+                return i
+            } else {
+                needleInd = 0
+            }
+        }
+
+        return -1
+    }
+}
