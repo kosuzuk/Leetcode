@@ -1,0 +1,23 @@
+class Solution {
+    func findKthPositive(_ arr: [Int], _ k: Int) -> Int {
+        var k = k
+        if arr[0] > k {
+            return k
+        } else {
+            k -= (arr[0] - 1)
+        }
+        
+        for i in 0..<(arr.count - 1) {
+            let diff = arr[i + 1] - arr[i]
+            if diff > 1 {
+                if diff > k {
+                    return arr[i] + k
+                } else {
+                    k -= (diff - 1)
+                }
+            }
+        }
+
+        return arr.last! + k
+    }
+}
